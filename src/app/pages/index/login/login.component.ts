@@ -63,20 +63,15 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const loginInfo = {
-      username: this.validateForm.value.username,
-      password: this.validateForm.value.password
-    };
 
-
-    //需要在这里判断得到的结果是什么，目前实现得到后台的response为2000则登录成功，目标是如果得到了token就跳转登录进去
-    this.userService.login(loginInfo).subscribe((res) => {
-      console.log('res',res)
-      res.err_code == 2000 ?
-        (res.data[0] ?
-          (this.createSuccessNotification(), this.router.navigate(['/shell'])) : this.createNoPassedNotification()
-        ) : this.createFailureNotification();
-    }
+    //需要在这里判断得到的结果是什么，得到后台的response为1000则登录成功
+    this.userService.login(this.validateForm.value.username, this.validateForm.value.password).subscribe(
+      (res) => {
+        console.log('res', res)
+        if (res.code == 1000) {
+          this.createSuccessNotification(), this.router.navigate(['/shell'])
+        }
+      }
     );
   }
 
